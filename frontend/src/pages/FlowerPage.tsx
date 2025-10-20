@@ -1,0 +1,123 @@
+import { useState, useEffect } from "react";
+import io from "socket.io-client";
+import { getFlower, createFlower, waterFlower, setFlowerDead } from "../services/flowerService";
+
+import WateringTimer from "../components/Timer";
+import Loading from "../components/Loading";
+import LifeTime from "../components/LifeTime";
+
+import cloudImg from "../assets/cloud.png";
+import flower3Img from "../assets/flower3.png";
+import flower2Img from "../assets/flower2.png";
+import flower1Img from "../assets/flower1.png";
+import flower0Img from "../assets/flower0.png";
+import { FlowerDTO } from "../dtos/flowerDto";
+
+const socket = io(import.meta.env.VITE_BACKEND_URL);
+
+const FlowerPage = () => {
+
+    const [flower, setFlower] = useState<FlowerDTO | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [isRaining, setIsRaining] = useState<boolean>(false);
+
+    const fetchFlower = async (rain: boolean = false): Promise<void> => {
+
+        if (!rain) setLoading(true);
+        const res = await getFlower();
+        
+        const fetchedFlower: FlowerDTO | null = res.data.Data;
+
+        setFlower(fetchedFlower);
+        if (!rain) setLoading(false);
+    };
+
+    useEffect(() => {
+        fetchFlower();
+
+        socket.on("flowerUpdated", (payload) => {
+            const updtedFlower: FlowerDTO = payload.flower;
+            setFlower(updtedFlower);
+            setIsRaining(true);
+            setTimeout(() => setIsRaining(false), 1000);
+        });
+
+        return () => {
+            socket.off("flowerUpdated");
+        };
+        
+    }, []);
+
+    const handleCreate = async () => {
+
+        await setFlowerDead();
+        await createFlower();
+
+        fetchFlower();
+    };
+
+    const handleWater = async () => {
+        await waterFlower();
+        fetchFlower(true);
+        setIsRaining(true);
+        setTimeout(() => setIsRaining(false), 1000);
+    };
+
+    if (loading) return <Loading />;
+    if (!flower) return <Loading />;
+
+    return (
+        <div className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] bg-gray-100 space-y-4">
+            
+            <WateringTimer key={flower.flowerNumber} startDate={flower.lastWateredAt} isWatering={isRaining}/>
+        
+            <div className="relative mx-auto w-[220px] h-[100px] flex items-center justify-center">,
+                <img src={cloudImg} alt="cloud" className="absolute w-[300px] h-[150px] object-contain pointer-events-none z-1"/>
+                <h1 className="text-3xl font-semibold text-gray-800 text-center py-16 z-2">Flower #{flower.flowerNumber}</h1>
+
+                {isRaining && (
+                <>
+                    <div className="absolute w-1 h-4 bg-blue-400 rounded-full left-30 animate-fall z-0"></div>
+                    <div className="absolute w-1 h-4 bg-blue-400 rounded-full left-20 animate-fall z-0"></div>
+                    <div className="absolute w-1 h-4 bg-blue-400 rounded-full left-30 animate-fall delay-200 z-0"></div>
+                    <div className="absolute w-1 h-4 bg-blue-400 rounded-full left-40 animate-fall delay-200 z-0"></div>
+                    <div className="absolute w-1 h-4 bg-blue-400 rounded-full left-10 animate-fall delay-300 z-0"></div>
+                    <div className="absolute w-1 h-4 bg-blue-400 rounded-full left-35 animate-fall delay-300 z-0"></div>
+                    <div className="absolute w-1 h-4 bg-blue-400 rounded-full left-15 animate-fall delay-400 z-0"></div>
+                    <div className="absolute w-1 h-4 bg-blue-400 rounded-full left-45 animate-fall delay-400 z-0"></div>
+                    <div className="absolute w-1 h-4 bg-blue-400 rounded-full left-10 animate-fall delay-500 z-0"></div>
+                    <div className="absolute w-1 h-4 bg-blue-400 rounded-full left-30 animate-fall delay-500 z-0"></div>
+                </>
+                )}
+            </div>
+
+            {flower.healthState === 3 ? (
+                
+            <img src={flower3Img} alt="healthy flower" className="w-48 h-48 object-contain animate-swing-fast" />
+            ) : flower.healthState === 2 ? (
+
+                <img src={flower2Img} alt="thirsty flower" className="w-48 h-48 object-contain animate-swing-mid" />
+            ) : flower.healthState === 1 ? (
+                
+                <img src={flower1Img} alt="sick flower" className="w-48 h-48 object-contain animate-swing-slow" />
+            ) : (
+                
+                <img src={flower0Img} alt="dead flower" className="w-48 h-48 object-contain" />
+            )}
+
+            {flower.healthState === 3 || flower.healthState === 2 || flower.healthState === 1 ? (
+                
+                <button onClick={handleWater} className="px-6 py-3 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600">
+                    Water The Flower
+                </button>
+            ) : (
+                <button onClick={handleCreate} className="px-6 py-3 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600">
+                    Create New Flower
+                </button>
+            )}
+            <LifeTime startDate={flower.createdAt} healthState={flower.healthState} diedAt={flower.diedAt}/>
+        </div>
+    );
+};
+
+export default FlowerPage;
