@@ -41,16 +41,13 @@ jobs:
           cd flowerforall
           git pull
 
+          cat <<EOF > .env
+          MONGO_URI=${{ secrets.MONGO_URI }}
+          VITE_BACKEND_URL=${{ secrets.VITE_BACKEND_URL }}
+          AWS_FRONTEND_URL=${{ secrets.AWS_FRONTEND_URL }}
+          EOF
+
           echo "Deploying containers with secrets..."
-          VITE_BACKEND_URL=${{ secrets.VITE_BACKEND_URL }} \
-          AWS_FRONTEND_URL=${{ secrets.AWS_FRONTEND_URL }} \
-          MONGO_URI=${{ secrets.MONGO_URI }} \
           docker-compose down || true
-          VITE_BACKEND_URL=${{ secrets.VITE_BACKEND_URL }} \
-          AWS_FRONTEND_URL=${{ secrets.AWS_FRONTEND_URL }} \
-          MONGO_URI=${{ secrets.MONGO_URI }} \
           docker-compose build
-          VITE_BACKEND_URL=${{ secrets.VITE_BACKEND_URL }} \
-          AWS_FRONTEND_URL=${{ secrets.AWS_FRONTEND_URL }} \
-          MONGO_URI=${{ secrets.MONGO_URI }} \
           docker-compose up -d
