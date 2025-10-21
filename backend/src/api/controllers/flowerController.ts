@@ -1,9 +1,10 @@
 import type { Request, Response } from "express";
 import { FlowerService } from "../../application/services/flowerService.js";
 import { FlowerRepo } from "../../infrastructure/repositories/flowerRepo.js";
+import { SettingsRepo } from "../../infrastructure/repositories/settingsRepo.js";
 import { Server } from "socket.io";
 
-const flowerService = new FlowerService(new FlowerRepo());
+const flowerService = new FlowerService(new FlowerRepo(), new SettingsRepo);
 
 // GET : get flower
 export const getFlower = async (req: Request, res: Response): Promise<void> => {
