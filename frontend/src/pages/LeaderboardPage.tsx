@@ -14,8 +14,6 @@ const LeaderboardPage = () => {
 
         const res = await getLeaderboard();
 
-        console.log(res.data.Data);
-
         setLeaderboard(res.data.Data);
 
         setLoading(false);

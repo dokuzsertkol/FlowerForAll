@@ -1,5 +1,5 @@
-import type { SettingsConfig } from "../../../domain/types/settingsConfig.js";
+import type { ISettings } from "../../../domain/types/settings.js";
 
 export interface ISettingsRepo {
-    getSettingsJson(): SettingsConfig;
+    getSettings(): Promise<ISettings | null>;
 }

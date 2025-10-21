@@ -1,9 +1,10 @@
-import type { SettingsConfig } from "../../domain/types/settingsConfig.js";
+import { Settings } from "../../domain/models/settingsModel.js";
+import type { ISettings } from "../../domain/types/settings.js";
 import type { ISettingsRepo } from "./interfaces/ISettingsRepo.js";
-import settingsConfig from "../../config/settingsConfig.json" with { type: "json" };
 
 export class SettingsRepo implements ISettingsRepo {
-    getSettingsJson(): SettingsConfig {
-        return settingsConfig;
+
+    async getSettings(): Promise<ISettings | null> {
+        return await Settings.findOne({});
     }
 }

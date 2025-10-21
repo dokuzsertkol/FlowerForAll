@@ -1,5 +1,5 @@
 import type { IFlower } from "../../domain/types/flower.js";
-import type { SettingsConfig } from "../../domain/types/settingsConfig.js";
+import type { SettingsConfig } from "../../domain/types/settings.js";
 import settingsConfig from "../../config/settingsConfig.json" with { type: "json" };
 
 const config: SettingsConfig = settingsConfig;
