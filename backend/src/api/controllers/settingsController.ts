@@ -8,7 +8,7 @@ const settingsService = new SettingsService(new SettingsRepo());
 export const getSettings = async (req: Request, res: Response): Promise<void> => {
 
     try {
-        const settings = settingsService.getStateSettings();
+        const settings = await settingsService.getStateSettings();
         res.json({ Success: true, Message: null, Data: settings });
     }
     catch (error) {
