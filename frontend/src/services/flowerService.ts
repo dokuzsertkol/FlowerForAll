@@ -9,5 +9,3 @@ export const waterFlower = () => api.put("/flower/water");
 export const setFlowerDead = () => api.put("/flower/dead");
 
 export const getLeaderboard = () => api.get("/flower/leaderboard");
-
-export const getSettings = () => api.get("/settings");

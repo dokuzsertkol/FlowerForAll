@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import io from "socket.io-client";
 import { getFlower, createFlower, waterFlower, setFlowerDead } from "../services/flowerService";
+import { getSettings } from "../services/settingsService";
+import { FlowerDTO } from "../dtos/flowerDto";
+import { SettingsDTO } from "../dtos/settingsDto";
 
 import WateringTimer from "../components/Timer";
 import Loading from "../components/Loading";
@@ -11,7 +14,6 @@ import flower3Img from "../assets/flower3.png";
 import flower2Img from "../assets/flower2.png";
 import flower1Img from "../assets/flower1.png";
 import flower0Img from "../assets/flower0.png";
-import { FlowerDTO } from "../dtos/flowerDto";
 
 const socket = io(import.meta.env.VITE_BACKEND_URL);
 
@@ -20,6 +22,8 @@ const FlowerPage = () => {
     const [flower, setFlower] = useState<FlowerDTO | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [isRaining, setIsRaining] = useState<boolean>(false);
+    const [settings, setSettings] = useState<SettingsDTO>({ totalStateCount: 0, intervalHours: 0, deathHours: 0});
+        
 
     const fetchFlower = async (rain: boolean = false): Promise<void> => {
 
@@ -32,8 +36,16 @@ const FlowerPage = () => {
         if (!rain) setLoading(false);
     };
 
+    const fetchSettings = async () => {
+
+      const settingsRes = await getSettings();
+      const fetchedSettings: SettingsDTO = settingsRes.data.Data;
+      setSettings(fetchedSettings);
+    }
+
     useEffect(() => {
         fetchFlower();
+        fetchSettings();
 
         socket.on("flowerUpdated", (payload) => {
             const updtedFlower: FlowerDTO = payload.flower;
@@ -71,9 +83,9 @@ const FlowerPage = () => {
             
             <WateringTimer key={flower.flowerNumber} startDate={flower.lastWateredAt} isWatering={isRaining}/>
         
-            <div className="relative mx-auto w-[220px] h-[100px] flex items-center justify-center">,
-                <img src={cloudImg} alt="cloud" className="absolute w-[300px] h-[150px] object-contain pointer-events-none z-1"/>
-                <h1 className="text-3xl font-semibold text-gray-800 text-center py-16 z-2">Flower #{flower.flowerNumber}</h1>
+            <div className="relative mx-auto w-[220px] h-[100px] flex items-center justify-center">
+                <img src={cloudImg} alt="cloud" className="absolute w-[300px] h-[150px] object-contain pointer-events-none"/>
+                <h1 className="text-3xl font-semibold text-gray-800 text-center py-16">Flower #{flower.flowerNumber}</h1>
 
                 {isRaining && (
                 <>
@@ -115,7 +127,7 @@ const FlowerPage = () => {
                     Create New Flower
                 </button>
             )}
-            <LifeTime startDate={flower.createdAt} healthState={flower.healthState} diedAt={flower.diedAt}/>
+            <LifeTime startDate={flower.createdAt} healthState={flower.healthState} diedAt={flower.diedAt} lastWateredAt={flower.lastWateredAt} stateCount={settings.totalStateCount} stateIntervalHours={settings.intervalHours}/>
         </div>
     );
 };

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { getSettings } from "../services/flowerService";
+import { getSettings } from "../services/settingsService";
+import { SettingsDTO } from "../dtos/settingsDto";
 
 import Loading from "../components/Loading";
 import flower3Img from "../assets/flower3.png";
@@ -8,7 +9,7 @@ import flower1Img from "../assets/flower1.png";
 import flower0Img from "../assets/flower0.png";
 
 const AboutPage = () => {
-    const [settings, setSettings] = useState({ totalStateCount: 0, intervalHours: 0, deathHours: 0});
+    const [settings, setSettings] = useState<SettingsDTO>({ totalStateCount: 0, intervalHours: 0, deathHours: 0});
     const [loading, setLoading] = useState(false);
 
     const githubLink = "https://github.com/dokuzsertkol/FlowerForAll";

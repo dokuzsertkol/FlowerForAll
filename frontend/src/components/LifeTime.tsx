@@ -4,14 +4,17 @@ interface LifeTimeProps {
     startDate: Date;
     healthState: number;
     diedAt: Date | null;
+    lastWateredAt: Date;
+    stateCount: number;
+    stateIntervalHours: number;
 }
 
-const LifeTime = ({ startDate, healthState, diedAt }: LifeTimeProps) => {
+const LifeTime = ({ startDate, healthState, diedAt, lastWateredAt, stateCount, stateIntervalHours }: LifeTimeProps) => {
     const [elapsed, setElapsed] = useState("");
 
     useEffect(() => {
         const start: Date = new Date(startDate);
-        const end: Date = healthState === 0 && diedAt ? new Date(diedAt) : new Date();
+        const end: Date = healthState === 0 && diedAt ? new Date(diedAt) : new Date(new Date(lastWateredAt).getTime() + (stateCount - 1) * stateIntervalHours * 1000 * 60 * 60);
 
         const updateElapsed = (endTime: Date): void => {
             const diff: number = Math.floor((endTime.getTime() - start.getTime()) / 1000);
@@ -26,7 +29,7 @@ const LifeTime = ({ startDate, healthState, diedAt }: LifeTimeProps) => {
             if (minutes > 0) parts.push(`${minutes}m`);
             if (seconds > 0) parts.push(`${seconds}s`);
 
-            setElapsed(parts.join(", "));
+            setElapsed(parts.join(" "));
         };
 
         updateElapsed(end);
@@ -35,7 +38,7 @@ const LifeTime = ({ startDate, healthState, diedAt }: LifeTimeProps) => {
             const timer = setInterval(() => updateElapsed(new Date()), 1000);
             return () => clearInterval(timer);
         }
-    }, [startDate, healthState, diedAt]);
+    }, [startDate, healthState, diedAt, lastWateredAt, stateCount, stateIntervalHours]);
 
     return (
         <div className={`text-xl font-semibold ${healthState === 0 ? "text-gray-600" : "text-blue-600"} mb-8`}>

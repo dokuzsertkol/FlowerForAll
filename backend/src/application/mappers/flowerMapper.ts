@@ -21,11 +21,16 @@ export const flowerToListDTO = (flower: IFlower): FlowerListDTO => {
     const diffMs: number = died.getTime() - created.getTime();
     const days: number = Math.floor(diffMs / (1000 * 60 * 60 * 24));
     const hours: number = Math.floor((diffMs / (1000 * 60 * 60)) % 24);
+
+    const parts = [];
+    if (days > 0) parts.push(`${days}d`);
+    if (hours > 0) parts.push(`${hours}h`);
+    const lifeTime:string = parts.join(" ");
     
     return {
         flowerNumber: flower.flowerNumber,
         diedAt: flower.diedAt ? new Date(flower.diedAt).toLocaleDateString("en-GB", { year: "numeric", month: "long", day: "numeric" }) : "Alive",
         createdAt: flower.createdAt.toLocaleDateString("en-GB", { year: "numeric", month: "long", day: "numeric" }),
-        timeSurvived: (days > 0) ? `${days} days, ${hours} hours` : `${hours} hours`
+        timeSurvived: lifeTime
     };
 }
