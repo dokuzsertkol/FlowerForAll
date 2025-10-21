@@ -1,5 +1,4 @@
 import type { ISettingsRepo } from "../../infrastructure/repositories/interfaces/ISettingsRepo.js";
-import type { ISettings } from "../../domain/types/settings.js";
 import type { SettingsDTO } from "../dtos/settingsDto.js";
 
 export class SettingsService {
@@ -7,10 +6,7 @@ export class SettingsService {
 
     async getStateSettings(): Promise<SettingsDTO> {
 
-        const config = await this.settingsRepo.getSettings() || {
-            stateIntervalHours: 0,
-            stateCount: 0,
-        } as ISettings;
+        const config = await this.settingsRepo.getSettings();
 
         const deathHours = (config.stateCount - 1) * config.stateIntervalHours;
 

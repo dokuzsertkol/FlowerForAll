@@ -2,6 +2,7 @@ import { Types } from "mongoose";
 import { Server } from "socket.io";
 
 import type { IFlowerRepo } from "../../infrastructure/repositories/interfaces/IFlowerRepo.js";
+import type { ISettingsRepo } from "../../infrastructure/repositories/interfaces/ISettingsRepo.js";
 import { flowerToDTO, flowerToListDTO } from "../mappers/flowerMapper.js";
 import type { FlowerDTO } from "../dtos/flowerDto.js";
 import type { FlowerListDTO } from "../dtos/flowerListDto.js";
@@ -9,7 +10,7 @@ import calcHealthState from "../utils/calcHealthState.js";
 import settingsConfig from "../../config/settingsConfig.json" with { type: "json" };
 
 export class FlowerService {
-    constructor(private flowerRepo: IFlowerRepo) {}
+    constructor(private flowerRepo: IFlowerRepo, private settingsRepo: ISettingsRepo) {}
 
     async getAliveFlower(): Promise<FlowerDTO | null> {
         
@@ -17,8 +18,9 @@ export class FlowerService {
 
         // if no flower in the database
         if (!flower) return null;
-        
-        const currentHealthState = await calcHealthState(flower);
+
+        const config = await this.settingsRepo.getSettings();
+        const currentHealthState = await calcHealthState(flower, config);
         
         return flowerToDTO(flower, currentHealthState);
     };
@@ -32,7 +34,8 @@ export class FlowerService {
         if (!lastFlower) return flowerToDTO(await this.flowerRepo.createFirstFlower(), maxHealthState);
 
         // check if the last flower is dead and announced dead
-        if (!lastFlower.diedAt || await calcHealthState(lastFlower) !== 0) return null;
+        const config = await this.settingsRepo.getSettings();
+        if (!lastFlower.diedAt || await calcHealthState(lastFlower, config) !== 0) return null;
 
         // creating new flower
         const newId = lastFlower ? lastFlower.flowerNumber + 1 : 1;
@@ -52,18 +55,19 @@ export class FlowerService {
         if (!flower) return null;
 
         // check if the flower is alive
-        if (await calcHealthState(flower) === 0) return null;
+        const config = await this.settingsRepo.getSettings();
+        if (await calcHealthState(flower, config) === 0) return null;
 
         // update lastWateredAt
         await this.flowerRepo.updateLastWaterDate(flower._id as Types.ObjectId);
         
         const updatedFlower = await this.flowerRepo.getFlowerById(flower._id as Types.ObjectId);
         if (!updatedFlower) return null;
-        const newHealthState = await calcHealthState(updatedFlower);
+        const newHealthState = await calcHealthState(updatedFlower, config);
 
         io.emit("flowerUpdated", { flower: flowerToDTO(updatedFlower, newHealthState) });
 
-        return flowerToDTO(updatedFlower, await calcHealthState(updatedFlower));
+        return flowerToDTO(updatedFlower, newHealthState);
     };
 
     async setAliveFlowerDead(): Promise<FlowerDTO | null> {
@@ -74,7 +78,8 @@ export class FlowerService {
         if (!flower) return null;
         
         // if flower is alive
-        if (await calcHealthState(flower) !== 0) return null;
+        const config = await this.settingsRepo.getSettings();
+        if (await calcHealthState(flower, config) !== 0) return null;
 
         // if flower is already announced dead
         if (flower.diedAt) return flowerToDTO(flower, 0);
