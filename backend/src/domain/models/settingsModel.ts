@@ -6,4 +6,4 @@ const settingsSchema = new Schema<ISettings>({
     stateCount: { type: Number, default: 0 }
 });
 
-export const Settings = model<ISettings>("Setting", settingsSchema, "settings");
+export const Settings = model<ISettings>("Settings", settingsSchema, "settings");
