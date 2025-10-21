@@ -7,10 +7,7 @@ export class CacheService {
     }
 
     async set<T>(key: string, value: T, ttlSeconds?: number): Promise<void> {
-        if (ttlSeconds) {
-            await redis.set(key, JSON.stringify(value), "EX", ttlSeconds);
-        } else {
-            await redis.set(key, JSON.stringify(value));
-        }
+        if (ttlSeconds) await redis.set(key, JSON.stringify(value), "EX", ttlSeconds);
+        else await redis.set(key, JSON.stringify(value));
     }
 }

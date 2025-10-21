@@ -45,6 +45,7 @@ jobs:
           MONGO_URI=${{ secrets.MONGO_URI }}
           VITE_BACKEND_URL=${{ secrets.VITE_BACKEND_URL }}
           AWS_FRONTEND_URL=${{ secrets.AWS_FRONTEND_URL }}
+          REDIS_URL=${{ secrets.REDIS_URL }}
           EOF
 
           echo "Deploying containers with secrets..."

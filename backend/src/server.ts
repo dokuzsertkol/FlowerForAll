@@ -22,9 +22,9 @@ app.use("/api/settings", settingsRoutes);
 const server = http.createServer(app);
 
 const allowedOrigins = [
-  process.env.FRONTEND_URL || "",      // AWS frontend URL
-  process.env.VERCEL_FRONTEND_URL || "", // Vercel frontend URL
-  "http://localhost:5173"
+    process.env.FRONTEND_URL || "",      // AWS frontend URL
+    process.env.VERCEL_FRONTEND_URL || "", // Vercel frontend URL
+    "http://localhost:5173"
 ]
 
 const io = new Server(server, {

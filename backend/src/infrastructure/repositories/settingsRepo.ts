@@ -9,10 +9,7 @@ export class SettingsRepo implements ISettingsRepo {
 
     async getSettings(): Promise<ISettings> {
         const cached = await this.cacheService.get<ISettings>(this.cacheKey);
-        if (cached) {
-            console.log("redis");
-            return cached;
-        }
+        if (cached) return cached;
         
         const config = await Settings.findOne({}).lean() as ISettings | null;
         const settings = config || { stateIntervalHours: 0, stateCount: 0 } as ISettings;
