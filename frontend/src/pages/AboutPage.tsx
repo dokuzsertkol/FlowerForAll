@@ -17,7 +17,6 @@ const AboutPage = () => {
     const fetchSettings = async () => {
         setLoading(true);
         const res = await getSettings();
-        console.log("elma", res);
         setSettings(res.data.Data);
         setLoading(false);
     };

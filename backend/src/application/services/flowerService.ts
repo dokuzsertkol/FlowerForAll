@@ -7,7 +7,6 @@ import { flowerToDTO, flowerToListDTO } from "../mappers/flowerMapper.js";
 import type { FlowerDTO } from "../dtos/flowerDto.js";
 import type { FlowerListDTO } from "../dtos/flowerListDto.js";
 import calcHealthState from "../utils/calcHealthState.js";
-import settingsConfig from "../../config/settingsConfig.json" with { type: "json" };
 
 export class FlowerService {
     constructor(private flowerRepo: IFlowerRepo, private settingsRepo: ISettingsRepo) {}
@@ -26,16 +25,14 @@ export class FlowerService {
     };
 
     async createNewFlower(io: Server): Promise<FlowerDTO | null> {
-
+        
+        const config = await this.settingsRepo.getSettings();
         const lastFlower = await this.flowerRepo.getLastFlower();
-        const maxHealthState = settingsConfig.stateCount - 1;
+        const maxHealthState = config.stateCount - 1;
 
         // the first ever flower creation
         if (!lastFlower) return flowerToDTO(await this.flowerRepo.createFirstFlower(), maxHealthState);
 
-        // check if the last flower is dead and announced dead
-        const config = await this.settingsRepo.getSettings();
-        if (!lastFlower.diedAt || await calcHealthState(lastFlower, config) !== 0) return null;
 
         // creating new flower
         const newId = lastFlower ? lastFlower.flowerNumber + 1 : 1;
@@ -85,7 +82,7 @@ export class FlowerService {
         if (flower.diedAt) return flowerToDTO(flower, 0);
 
         // calculate date of death
-        const diedAtDate: Date = new Date(flower.lastWateredAt.getTime() + (settingsConfig.stateCount - 1) * settingsConfig.stateIntervalHours * 1000 * 60 * 60);
+        const diedAtDate: Date = new Date(flower.lastWateredAt.getTime() + (config.stateCount - 1) * config.stateIntervalHours * 1000 * 60 * 60);
 
         // set flower dead
         await this.flowerRepo.updateDeathDate(flower._id as Types.ObjectId, diedAtDate);
