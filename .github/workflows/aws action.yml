@@ -36,7 +36,7 @@ jobs:
           fi
 
           if [ ! -d "flowerforall" ]; then
-            git clone https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/dokuzsertkol/FlowerForAll.git flowerforall
+            git clone https://github.com/dokuzsertkol/FlowerForAll.git flowerforall
           fi
           cd flowerforall
           git pull
