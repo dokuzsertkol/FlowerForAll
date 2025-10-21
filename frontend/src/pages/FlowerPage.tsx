@@ -84,37 +84,37 @@ const FlowerPage = () => {
             <WateringTimer key={flower.flowerNumber} startDate={flower.lastWateredAt} isWatering={isRaining}/>
         
             <div className="relative mx-auto w-[220px] h-[100px] flex items-center justify-center">
-                <img src={cloudImg} alt="cloud" className="absolute w-[300px] h-[150px] object-contain pointer-events-none"/>
-                <h1 className="text-3xl font-semibold text-gray-800 text-center py-16">Flower #{flower.flowerNumber}</h1>
+                <img src={cloudImg} alt="cloud" className="absolute w-[300px] h-[150px] object-contain pointer-events-none z-20"/>
+                <h1 className="text-3xl font-semibold text-gray-800 text-center py-16 z-30">Flower #{flower.flowerNumber}</h1>
 
                 {isRaining && (
                 <>
-                    <div className="absolute w-1 h-4 bg-blue-400 rounded-full left-30 animate-fall z-0"></div>
-                    <div className="absolute w-1 h-4 bg-blue-400 rounded-full left-20 animate-fall z-0"></div>
-                    <div className="absolute w-1 h-4 bg-blue-400 rounded-full left-30 animate-fall delay-200 z-0"></div>
-                    <div className="absolute w-1 h-4 bg-blue-400 rounded-full left-40 animate-fall delay-200 z-0"></div>
-                    <div className="absolute w-1 h-4 bg-blue-400 rounded-full left-10 animate-fall delay-300 z-0"></div>
-                    <div className="absolute w-1 h-4 bg-blue-400 rounded-full left-35 animate-fall delay-300 z-0"></div>
-                    <div className="absolute w-1 h-4 bg-blue-400 rounded-full left-15 animate-fall delay-400 z-0"></div>
-                    <div className="absolute w-1 h-4 bg-blue-400 rounded-full left-45 animate-fall delay-400 z-0"></div>
-                    <div className="absolute w-1 h-4 bg-blue-400 rounded-full left-10 animate-fall delay-500 z-0"></div>
-                    <div className="absolute w-1 h-4 bg-blue-400 rounded-full left-30 animate-fall delay-500 z-0"></div>
+                    <div className="absolute w-1 h-4 bg-blue-400 rounded-full left-30 animate-fall z-10"></div>
+                    <div className="absolute w-1 h-4 bg-blue-400 rounded-full left-20 animate-fall z-10"></div>
+                    <div className="absolute w-1 h-4 bg-blue-400 rounded-full left-30 animate-fall delay-200 z-10"></div>
+                    <div className="absolute w-1 h-4 bg-blue-400 rounded-full left-40 animate-fall delay-200 z-10"></div>
+                    <div className="absolute w-1 h-4 bg-blue-400 rounded-full left-10 animate-fall delay-300 z-10"></div>
+                    <div className="absolute w-1 h-4 bg-blue-400 rounded-full left-35 animate-fall delay-300 z-10"></div>
+                    <div className="absolute w-1 h-4 bg-blue-400 rounded-full left-15 animate-fall delay-400 z-10"></div>
+                    <div className="absolute w-1 h-4 bg-blue-400 rounded-full left-45 animate-fall delay-400 z-10"></div>
+                    <div className="absolute w-1 h-4 bg-blue-400 rounded-full left-10 animate-fall delay-500 z-10"></div>
+                    <div className="absolute w-1 h-4 bg-blue-400 rounded-full left-30 animate-fall delay-500 z-10"></div>
                 </>
                 )}
             </div>
 
             {flower.healthState === 3 ? (
                 
-            <img src={flower3Img} alt="healthy flower" className="w-48 h-48 object-contain animate-swing-fast" />
+            <img src={flower3Img} alt="healthy flower" className="w-48 h-48 object-contain animate-swing-fast z-0" />
             ) : flower.healthState === 2 ? (
 
-                <img src={flower2Img} alt="thirsty flower" className="w-48 h-48 object-contain animate-swing-mid" />
+                <img src={flower2Img} alt="thirsty flower" className="w-48 h-48 object-contain animate-swing-mid z-0" />
             ) : flower.healthState === 1 ? (
                 
-                <img src={flower1Img} alt="sick flower" className="w-48 h-48 object-contain animate-swing-slow" />
+                <img src={flower1Img} alt="sick flower" className="w-48 h-48 object-contain animate-swing-slow z-0" />
             ) : (
                 
-                <img src={flower0Img} alt="dead flower" className="w-48 h-48 object-contain" />
+                <img src={flower0Img} alt="dead flower" className="w-48 h-48 object-contain z-0" />
             )}
 
             {flower.healthState === 3 || flower.healthState === 2 || flower.healthState === 1 ? (
