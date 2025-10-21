@@ -14,7 +14,7 @@ const LifeTime = ({ startDate, healthState, diedAt, lastWateredAt, stateCount, s
 
     useEffect(() => {
         const start: Date = new Date(startDate);
-        const end: Date = healthState === 0 && diedAt ? new Date(diedAt) : new Date(new Date(lastWateredAt).getTime() + (stateCount - 1) * stateIntervalHours * 1000 * 60 * 60);
+        const end: Date = healthState === 0 ? diedAt ? new Date(diedAt) : new Date(new Date(lastWateredAt).getTime() + (stateCount - 1) * stateIntervalHours * 1000 * 60 * 60) : new Date();
 
         const updateElapsed = (endTime: Date): void => {
             const diff: number = Math.floor((endTime.getTime() - start.getTime()) / 1000);
