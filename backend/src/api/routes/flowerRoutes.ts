@@ -4,9 +4,9 @@ import { getFlower, createFlower, waterFlower, setFlowerDead, getFlowerLeaderboa
 const flowerRoutes: Router = Router();
 
 flowerRoutes.get("/", getFlower);
-flowerRoutes.post("/create", createFlower);
+flowerRoutes.post("/", createFlower);
 flowerRoutes.put("/water", waterFlower);
 flowerRoutes.put("/dead", setFlowerDead);
-flowerRoutes.get("/deadlist", getFlowerLeaderboard);
+flowerRoutes.get("/leaderboard", getFlowerLeaderboard);
 
 export default flowerRoutes;
