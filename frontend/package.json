@@ -1,8 +1,11 @@
 {
   "name": "frontend",
-  "private": true,
-  "version": "0.0.0",
+  "private": false,
+  "version": "1.0.0",
+  "description": "FlowerForAll Frontend (React + Vite)",
   "type": "module",
+  "author": "dokuzsertkol (https://github.com/dokuzsertkol)",
+  "license": "GPL-3.0",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
