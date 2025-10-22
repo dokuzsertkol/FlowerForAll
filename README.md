@@ -6,6 +6,10 @@ Built with a real-time architecture using Node.js, React, and a Clean N-Layer ba
 ## Live Project
 - [Vercel + Render + MongoDB Atlas + Upstash Redis](https://flowerforall.vercel.app/) (may take a few seconds to load)
 - [AWS EC2 + MongoDB Atlas + Upstash Redis](http://13.48.125.240/) (HTTP only)
+<img width="1520" height="928" alt="image" src="https://github.com/user-attachments/assets/5601a45b-8892-45ee-996c-b8acc1b30159" />
+<img width="1631" height="928" alt="image" src="https://github.com/user-attachments/assets/494e3d80-c58b-4032-be2b-e49073bb1b17" />
+<img width="1572" height="928" alt="image" src="https://github.com/user-attachments/assets/eb839706-6534-4995-bffb-dab17b242704" />
+
 
 ## Features
 - **Shared Flower:** Everyone can water and watch the same flower.
