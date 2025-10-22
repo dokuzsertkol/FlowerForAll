@@ -25,15 +25,18 @@ const FlowerPage = () => {
     const [settings, setSettings] = useState<SettingsDTO>({ totalStateCount: 0, intervalHours: 0, deathHours: 0});
         
 
-    const fetchFlower = async (rain: boolean = false): Promise<void> => {
+    const fetchFlower = async (): Promise<void> => {
 
-        if (!rain) setLoading(true);
-        const res = await getFlower();
-        
-        const fetchedFlower: FlowerDTO | null = res.data.Data;
-
-        setFlower(fetchedFlower);
-        if (!rain) setLoading(false);
+        try {
+            setLoading(true);
+            const res = await getFlower();
+            const fetchedFlower: FlowerDTO | null = res.data.Data;
+            if (fetchedFlower) setFlower(fetchedFlower);
+        } catch (error) {
+            console.error("Flower fetch failed", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const fetchSettings = async () => {
@@ -47,30 +50,31 @@ const FlowerPage = () => {
         fetchFlower();
         fetchSettings();
 
-        socket.on("flowerUpdated", (payload) => {
-            const updtedFlower: FlowerDTO = payload.flower;
-            setFlower(updtedFlower);
+        const handleFlowerUpdate = (payload: { flower: FlowerDTO }) => {
+            setFlower(payload.flower);
             setIsRaining(true);
             setTimeout(() => setIsRaining(false), 1000);
-        });
-
-        return () => {
-            socket.off("flowerUpdated");
         };
-        
-    }, []);
+
+        socket.on("flowerUpdated", handleFlowerUpdate);
+        return () => {
+            socket.off("flowerUpdated", handleFlowerUpdate);
+        };
+    }, [socket]);
 
     const handleCreate = async () => {
 
         await setFlowerDead();
-        await createFlower();
-
-        fetchFlower();
+        const res = await createFlower();
+        const fetchedFlower: FlowerDTO | null = res.data.Data;
+        if (fetchedFlower) setFlower(fetchedFlower);
     };
 
     const handleWater = async () => {
-        await waterFlower();
-        fetchFlower(true);
+        const res = await waterFlower();
+        const fetchedFlower: FlowerDTO | null = res.data.Data;
+        if (fetchedFlower) setFlower(fetchedFlower);
+
         setIsRaining(true);
         setTimeout(() => setIsRaining(false), 1000);
     };

@@ -45,7 +45,7 @@ export const createFlower = async (req: Request, res: Response): Promise<void> =
 export const waterFlower = async (req: Request, res: Response): Promise<void> => {
     try {
         const io: Server = req.app.get("io");
-        const flower = flowerService.waterAliveFlower(io);
+        const flower = await flowerService.waterAliveFlower(io);
 
         if (!flower){
             res.json({Success: false, Message: "Flower is dead."});
