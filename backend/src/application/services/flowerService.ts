@@ -26,8 +26,10 @@ export class FlowerService {
 
     async createNewFlower(io: Server): Promise<FlowerDTO | null> {
         
-        const config = await this.settingsRepo.getSettings();
         const lastFlower = await this.flowerRepo.getLastFlower();
+        if (!lastFlower?.diedAt) return null;
+
+        const config = await this.settingsRepo.getSettings();
         const maxHealthState = config.stateCount - 1;
 
         // the first ever flower creation
