@@ -48,7 +48,7 @@ Built with a real-time architecture using Node.js, React, and a Clean N-Layer ba
 Run the project easily using Docker and Docker Compose:
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/flowerforall.git
+git clone https://github.com/dokuzsertkol/flowerforall.git
 cd flowerforall
 
 # Build and start the project with Docker
